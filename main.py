@@ -6,22 +6,18 @@ print('Update tag keys, update tag values, add tags and delete tags across an Az
 print('')
 
 # Include resources or resource groups
+include_resource_groups == True
 include_resource_groups = input('Do you want to include resource groups? If so type "yes": ')
-if include_resource_groups == 'yes':
-    include_resource_groups == True
-else:
+if include_resource_groups == 'no':
     include_resource_groups == False
 
+include_resources == True
 include_resources = input('Do you want to include resources? If so type "yes": ')
-if include_resources == 'yes':
-    include_resources == True
-else:
+if include_resources == 'no':
     include_resources == False
 
-# Setting Validation
-
 if not include_resource_groups and include_resources:
-    print('You must include resources or resource groups for the script to do something')
+    print('You must include resources or resource groups for the script to do something.')
     exit()
 
 print('We will now collect some details... Please ensure you have a service principal created.')
@@ -50,9 +46,12 @@ def validate(x):
         print('Exiting...')
         exit()
 
+
+## Toolkit choice
+## TO DO Loop through keys, values, tags = add to list to append
 print('')
 print('')
-toolkit_choice = input('Please enter what you want to modify? Select from: keys, values, add or delete \n')
+toolkit_choice = input('Please enter what you want to change\n Select from: keys, values, add or delete. \n')
 if toolkit_choice == 'keys':
     print('')
     print('Lets begin...')
@@ -80,44 +79,7 @@ if toolkit_choice == 'delete':
     tag_list = input('Old tag(s): ')
     del_tags = list(tag_list.split(','))
     print('')
-    
 
-# Toolkit choice
-print('Please specify which part of the toolkit you require...')
-toolkit_update_key = input('Do you want to update tag keys? If so type yes: ')
-if toolkit_update_key == 'yes':
-    print('')
-    print('Lets begin...')
-    old_key = input('Old key: ')
-    validate(old_key)
-    new_key = input('New key: ')
-    validate(new_key)
-
-toolkit_update_value = input('Do you want to update tag values? If so type yes: ')
-if toolkit_update_value == 'yes':
-    print('')
-    print('Lets begin...')
-    key_value = input('Key for the value: ')
-    validate(key_value)
-    new_value = input('New value for the tag: ')
-    validate(new_value)
-
-toolkit_add_tag = input('Do you want to add new tags? If so type yes: ')
-if toolkit_add_tag == 'yes':
-    print('')
-    print('Lets begin...')
-    tag_key = input('New tag key: ')
-    validate(tag_key)
-    tag_value = input('New tag value: ')
-    validate(tag_value)
-
-toolkit_del_tag = input('Do you want to delete tags? If so type yes: ')
-if toolkit_del_tag == 'yes':
-    print('')
-    print('Lets begin... Please enter each tag you want deleting seperated by a comma (case sensitive).')
-    tag_list = input('Old tag(s): ')
-    del_tags = list(tag_list.split(','))
-    print('')
 
 # Global Variable
 base_url = 'https://management.azure.com'
@@ -224,7 +186,7 @@ for subscription in subscriptions_json_response['value']:
         resource_group_json_response = json.loads(resource_group_response)
         resource_json_response['value'] = resource_json_response['value'] + resource_group_json_response['value']
     
-    if toolkit_update_key == 'yes':
+    if toolkit_choice == 'keys':
         for resource in resource_json_response['value']:
             if resource and 'tags' in resource and old_key in resource['tags']:
                 tags = resource['tags']
@@ -235,7 +197,7 @@ for subscription in subscriptions_json_response['value']:
                 tagRequests()
         complete()
 
-    if toolkit_add_tag == 'yes':
+    if toolkit_choice == 'add':
         for resource in resource_json_response['value']:
             if resource and 'tags' in resource:
                 tags = resource['tags']
@@ -243,7 +205,7 @@ for subscription in subscriptions_json_response['value']:
                 tagRequests()
         complete()
 
-    if toolkit_update_value == 'yes':
+    if toolkit_choice == 'values':
         for resource in resource_json_response['value']:
             if resource and 'tags' in resource:
                 tags = resource['tags']
@@ -251,7 +213,7 @@ for subscription in subscriptions_json_response['value']:
                 tagRequests()
         complete()
 
-    if toolkit_del_tag == 'yes':
+    if toolkit_choice == 'delete':
         for resource in resource_json_response['value']:
             if resource and 'tags' in resource:
                 tags = resource['tags']
