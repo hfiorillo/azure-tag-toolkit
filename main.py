@@ -69,15 +69,19 @@ if toolkit_choice == 'values':
 if toolkit_choice == 'add':
     print('')
     print('Lets begin...')
-    key_value = input('New key for the tag: ')
-    validate(key_value)
-    new_value = input('New value for the tag: ')
-    validate(new_value)
+    tag_key = input('New key for the tag: ')
+    validate(tag_key)
+    tag_value = input('New value for the tag: ')
+    validate(tag_value)
 if toolkit_choice == 'delete':
     print('')
     print('Lets begin... Please enter each tag you want deleting seperated by a comma (case sensitive).')
     tag_list = input('Old tag(s): ')
     del_tags = list(tag_list.split(','))
+    confirm = input('These are the tags you have chosen to delete ' + del_tags + ' type "confirm" to continue.')
+    if confirm != 'confirm':
+        print('Exiting...')
+        exit()
     print('')
 
 
